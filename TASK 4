@@ -1,0 +1,100 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Tic Tac Toe</title> 
+<link rel="stylesheet" href="styles.css"> 
+</head>
+<body> 
+<div class="tic-tac-toe"> 
+<div id="board">
+<div class="cell" data-index="0"></div>
+<div class="cell" data-index="1"></div>
+<div class="cell" data-index="2"></div> 
+<div class="cell" data-index="3"></div> 
+<div class="cell" data-index="4"></div> 
+<div class="cell" data-index="5"></div> 
+<div class="cell" data-index="6"></div>
+<div class="cell" data-index="7"></div>
+<div class="cell" data-index="8"></div> 
+</div>
+<button id="resetBtn">Reset</button>
+</div>
+<script src="script.js"></script> 
+</body> 
+</html>
+body { 
+display: flex;
+justify-content: center;
+align-items: center; 
+height: 100vh; 
+background-color: #f0f0f0; 
+font-family: Arial, sans-serif; 
+}
+.tic-tac-toe {
+text-align: center;
+}
+#board { 
+display: grid;
+grid-template-columns: repeat(3, 100px);
+grid-template-rows: repeat(3, 100px);
+gap: 5px;
+}
+.cell { 
+width: 100px;
+height: 100px;
+display: flex; 
+justify-content: center; 
+align-items: center;
+font-size: 2em;
+background-color: #fff;
+border: 1px solid #000;
+cursor: pointer; 
+}
+button { 
+font-size: 1em;
+padding: 10px 20px;
+margin-top: 20px;
+cursor: pointer;
+}
+const board = document.getElementById('board'); 
+const cells = document.querySelectorAll('.cell'); 
+const resetBtn = document.getElementById('resetBtn');
+let currentPlayer = 'X';
+let gameActive = true;
+let boardState = ['', '', '', '', '', '', '', '', ''];
+cells.forEach(cell => cell.addEventListener('click', handleCellClick)); 
+resetBtn.addEventListener('click', resetGame);
+function handleCellClick(event) { 
+const cell = event.target;
+const index = cell.getAttribute('data-index');
+if (boardState[index] !== '' || !gameActive) {
+return; 
+}
+boardState[index] = currentPlayer; 
+cell.textContent = currentPlayer;
+if (checkWin()) 
+{
+alert(`${currentPlayer} wins!`); 
+gameActive = false; 
+}
+else if (boardState.every(cell => cell !== '')) 
+{
+alert('Draw!');
+gameActive = false;
+} 
+else {
+currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}
+}
+function checkWin() 
+{
+const winConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]; 
+return winConditions.some(condition => { return condition.every(index => boardState[index] === currentPlayer);
+});
+} 
+function resetGame() { boardState = ['', '', '', '', '', '', '', '', '']; 
+cells.forEach(cell => cell.textContent = '');
+currentPlayer = 'X'; gameActive = true;
+}
